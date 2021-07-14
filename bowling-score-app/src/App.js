@@ -6,7 +6,7 @@ function App() {
   const [currentTime, setCurrentTime] = useState(0);
 
   useEffect(() => {
-    fetch("/time")
+    fetch("/time") // this fetch ties in to the app.route in python
       .then((res) => res.json())
       .then((data) => {
         setCurrentTime(data.time);

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
+  const [activeGame, setActiveGame] = useState(false);
   const [playaData, setCurrentPlaya] = useState([]);
   useEffect(() => {
     async function getPlayerData() {
@@ -15,7 +16,19 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <p>The current test player is {playaData.playerName}.</p>
+        <p>This is just an example of SQL data: {playaData.playerName}</p>
+        <div>
+          {activeGame ? (
+            <div>
+              <p>Game Started!</p>
+              <button onClick={() => setActiveGame(false)}>End Game</button>
+            </div>
+          ) : (
+            <div>
+              <button onClick={() => setActiveGame(true)}>Start Game</button>
+            </div>
+          )}
+        </div>
       </header>
     </div>
   );

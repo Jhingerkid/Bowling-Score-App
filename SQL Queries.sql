@@ -10,3 +10,7 @@ CREATE TABLE `bowling_score`.`players` (
   `lastGame` INT NOT NULL,
   `highScore` INT NOT NULL,
   `totalGames` INT NOT NULL);
+  
+# add a new player
+INSERT INTO bowling_score.players (playerName, playerAvg, lastGame, highScore, totalGames) VALUES 
+("Test Player", 130, 102, 210, 40);

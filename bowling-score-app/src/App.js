@@ -1,23 +1,21 @@
 import React, { useState, useEffect } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 function App() {
-  const [currentTime, setCurrentTime] = useState(0);
-
+  const [playaData, setCurrentPlaya] = useState([]);
   useEffect(() => {
-    fetch("/time") // this fetch ties in to the app.route in python
-      .then((res) => res.json())
-      .then((data) => {
-        setCurrentTime(data.time);
-      });
+    async function getPlayerData() {
+      let response = await fetch("/players");
+      let player = await response.json();
+      setCurrentPlaya(player[0]);
+    }
+    getPlayerData();
   }, []);
-
+  console.log("Object Information", playaData);
   return (
     <div className="App">
       <header className="App-header">
-        ... no changes in this part ...
-        <p>The current time is {currentTime}.</p>
+        <p>The current test player is {playaData.playerName}.</p>
       </header>
     </div>
   );

@@ -6,6 +6,7 @@ function App() {
   const [activeGame, setActiveGame] = useState(false);
   const [newPlayer, setNewPlayer] = useState(false);
   const [playaData, setCurrentPlaya] = useState([]);
+  const [currentPlayers, setCurrentPlayers] = useState([]);
   useEffect(() => {
     async function getPlayerData() {
       let response = await fetch("/players");
@@ -14,13 +15,29 @@ function App() {
     }
     getPlayerData();
   }, []);
-  console.log("Object Information", playaData);
+  // console.log("Object Information", playaData);
+
+  
+  // This useEffect just puts each current player into a li for rendering 
+  let currentPlayerList
+  useEffect(() => {
+    currentPlayerList = []
+    for (let player of currentPlayerList) {
+      currentPlayerList.push(<li>{player}</li>)
+    }
+    return currentPlayerList;
+  }, [currentPlayers]);
 
   const newPlayerModal = <div>
     <h3>Enter New Player Name:<input type="text" placeholder="Name"></input></h3>
     {/* the next button should submit the name to make a new player */}
     <button onClick={() => setNewPlayer(false)}>Submit</button>
   </div>
+
+  function add() {
+    setCurrentPlayers("Bob");
+    console.log(currentPlayers)
+  }
 
 
 
@@ -36,7 +53,7 @@ function App() {
             </div>
           ) : newPlayer ? <div>
           <Modal onClose={() => setNewPlayer(false)} show={newPlayer} title={"Create New Player"}>
-          {newPlayerModal}
+            {newPlayerModal}
           </Modal>
         </div>
         : <div>
@@ -51,8 +68,8 @@ function App() {
               </tr>
             </table>
             <h2>Currently Selected Players:</h2>
-
-            <button>Delete Player</button>
+              <ol>{currentPlayerList}</ol>
+            <button onClick={() => add()}>Delete Player</button>
             <button onClick={() => setNewPlayer(true)}>New Player</button>
             <button onClick={() => setActiveGame(true)}>Start Game</button>
           </div> }

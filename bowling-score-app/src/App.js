@@ -66,7 +66,7 @@ const exitGame =  async () => {
 
   return (
     <div>
-      <header>
+      <div className="menu-box">
         <p>This is just an example of SQL data: {playaData.playerName}</p>
         <div>
           {activeGame ? (
@@ -98,7 +98,7 @@ const exitGame =  async () => {
             <button onClick={startGame}>Start Game</button>
           </div> }
         </div>
-      </header>
+      </div>
     </div>
   );
 }

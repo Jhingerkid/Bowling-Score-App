@@ -2,13 +2,16 @@ import { useState, useEffect } from "react";
 import Modal from './Modal.js';
 import "./App.css";
 import {ScoreCard} from "./score-card";
-import {activePlayer} from "./active-player"
+import { game } from "./game"
+import { ScoreInput } from "./score-input";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayer, setNewPlayer] = useState(false);
+  const [buttonInput, setButtonInput] = useState(false);
+  const [currentInputValue, setCurrentInputValue] = useState(0);
 
   // This is a dummy array for testing purposes. Ready for Leaf to replace with an array built from the selection screen. 
   // Just let me know if you use a different format, and I'll change my functions to match.
@@ -28,11 +31,7 @@ function App() {
   ]
 
   const startGame = () => {
-    let newGameData = {};
-    newGameData.players = currentPlayersArray.map(playerEntry => new activePlayer(playerEntry.id, playerEntry.name));
-    newGameData.currentTurn = 0;
-    newGameData.winnerID = null;
-    newGameData.winnerScore = null;
+    let newGameData = new game(currentPlayersArray)
     setGameData(newGameData);
     setActiveGame(true);
 }
@@ -72,6 +71,14 @@ const exitGame =  async () => {
           {activeGame ? (
             <div>
               <p>Game Started!</p>
+              <ScoreInput 
+                gameData={gameData}
+                setGameData={setGameData}
+                buttonInput={buttonInput}
+                setButtonInput={setButtonInput}
+                currentInputValue={currentInputValue}
+                setCurrentInputValue={setCurrentInputValue}
+              />
               <button onClick={exitGame}>End Game</button>
               <ScoreCard gameData={gameData} />
             </div>

@@ -58,10 +58,20 @@ function App() {
     });
   }
 
+  function createNewPlayer(playerName) {
+    let data = { playerName: playerName };
+    fetch("/newPlayer", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   useEffect(() => {
     async function getPlayerData() {
       let response = await fetch("/players");
       let player = await response.json();
+      console.log(player);
       setPlayaData(player[0]);
     }
     getPlayerData();
@@ -164,12 +174,20 @@ function App() {
               </button>
               <button onClick={() => setNewPlayer(true)}>New Player</button>
               <button onClick={startGame}>Start Game</button>
+              {/* both of these buttons below can be deleted, they're there for testing purposes now */}
               <button
                 onClick={() => {
                   sendWinnerData(2, 200);
                 }}
               >
                 Send Score Test
+              </button>
+              <button
+                onClick={() => {
+                  createNewPlayer("Jimothy");
+                }}
+              >
+                Add New Player Test
               </button>
             </div>
           )}

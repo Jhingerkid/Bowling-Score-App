@@ -42,6 +42,14 @@ def get_current_players():
     return json.dumps(response)
 
 
+@app.route('/newPlayer', methods=['POST'])
+def submit_new_player():
+    playerName = request.json['playerName']
+    query = 'INSERT INTO bowling_score.players (playerName, playerAvg, lastGame, highScore, totalGames) VALUES \
+        ("' + playerName + '", "0", "0", "0", "0");'
+    dbInsert(query)
+    return ('', 204)
+
 @app.route('/submitScore', methods=['POST'])
 def submit_player_score():
     playerId = str(request.json['playerId'])

@@ -1,11 +1,24 @@
 export const ScoreInput = ({gameData, setGameData, buttonInput, setButtonInput, currentInputValue, setCurrentInputValue}) => {
     let inputBox = null;
     let messageText = `It's ${gameData.players[gameData.turn].playerName}'s Turn`
+    let pinsLeft  = gameData.players[gameData.turn].playerPins
     if(buttonInput){
         inputBox = <p>Button input is not implemented yet!</p>
     }
     else{
-        inputBox = <input type="number" min="0" max={gameData.players[gameData.turn].playerPins} value={currentInputValue} onChange={event => setCurrentInputValue(event.target.value)} />
+        inputBox = <input 
+                        type="number" 
+                        min="0" max={pinsLeft} 
+                        value={currentInputValue} 
+                        onChange={event => {
+                            if(event.target.value <= pinsLeft){
+                                setCurrentInputValue(event.target.value)
+                            }
+                            else{
+                                setCurrentInputValue(pinsLeft)
+                            }
+                        }}
+                    />
     }
     if(gameData.winnerID){
         messageText = `${gameData.winnerName} has won the game, with ${gameData.winnerScore} points`

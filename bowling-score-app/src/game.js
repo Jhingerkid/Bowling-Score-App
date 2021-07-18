@@ -26,19 +26,56 @@ export class game {
     }
 
     addScore(scoreInput) {
-        let playerScoring = this.players[this.turn];
+        let activePlayer = this.players[this.turn];
         let shotIndex = this.shot;
         let frameIndex = this.frame
-        if(this.firstShot){
-            playerScoring.playerPins -= scoreInput
-            if(shotIndex > 0){
-                playerScoring.playerFrames.totals[frameIndex] = playerScoring.playerFrames.totals[frameIndex - 1]
+        let isStrike = false;
+        let isSpare = false;
+        // set remaining pin count and record strike or spare
+        activePlayer.playerPins -= scoreInput
+        if(activePlayer.playerPins === 0){
+            if(this.firstShot){
+                isStrike = true;
+                activePlayer.playerStrikes.push(frameIndex)
+            }
+            else{
+                isSpare = true;
+                activePlayer.playerSpares.push(frameIndex)
             }
         }
-        playerScoring.playerFrames.scores[shotIndex] = scoreInput
-        playerScoring.playerFrames.totals[frameIndex] = scoreInput + Number(playerScoring.playerFrames.totals[frameIndex])
-        playerScoring.playerTotal = playerScoring.playerFrames.totals[frameIndex]
+        // see if previous strikes or spares are earning additional points based on this shot and add them
+        if(activePlayer.playerStrikes.includes(frameIndex - 1)){
+            activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput
+            if(this.firstShot === false){
+                activePlayer.playerFrames.totals[frameIndex] += scoreInput
+            }
+        }
+        if((activePlayer.playerSpares.includes(frameIndex - 1)) && this.firstShot){
+            activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput
+        }
+        if(this.firstShot && shotIndex > 0){
+            activePlayer.playerFrames.totals[frameIndex] = activePlayer.playerFrames.totals[frameIndex - 1]
+        }
+        if(isStrike){
+            activePlayer.playerFrames.scores[shotIndex] = "X"
+        }
+        else if(isSpare){
+            activePlayer.playerFrames.scores[shotIndex] = "/"
+        }
+        else if(scoreInput === 0){
+            activePlayer.playerFrames.scores[shotIndex] = "-"
+        }
+        else{
+            activePlayer.playerFrames.scores[shotIndex] = scoreInput
+        }
+        activePlayer.playerFrames.totals[frameIndex] = scoreInput + Number(activePlayer.playerFrames.totals[frameIndex])
+        activePlayer.playerTotal = activePlayer.playerFrames.totals[frameIndex]
         this.nextTurn()
+        // if the next player just scored a strike, skip their shot and mark the field with "-"
+        while(this.players[this.turn].playerPins === 0){
+            this.players[this.turn].playerFrames.scores[this.shot] = "-"
+            this.nextTurn()
+        }
         return
     }
 
@@ -127,8 +164,8 @@ class player {
                 ""
             ]
         };
-        this.playerStrikes = {};
-        this.playerSpares = {};
+        this.playerStrikes = [];
+        this.playerSpares = [];
         this.playerTotal = 0;
     }
 }

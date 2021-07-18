@@ -2,14 +2,17 @@ import { useState, useEffect } from "react";
 import Modal from "./Modal.js";
 import { newPlayerModal, deletePlayerModal } from "./modal_pages.js";
 import "./App.css";
-import { ScoreCard } from "./score-card";
-import { activePlayer } from "./active-player";
+import {ScoreCard} from "./score-card";
+import { game } from "./game"
+import { ScoreInput } from "./score-input";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayer, setNewPlayer] = useState(false);
+  const [buttonInput, setButtonInput] = useState(false);
+  const [currentInputValue, setCurrentInputValue] = useState(0);
   const [deletePlayer, setDeletePlayer] = useState(false);
   // const [playaData, setCurrentPlaya] = useState([]);
   const [currentPlayers, setCurrentPlayers] = useState([]);
@@ -32,13 +35,7 @@ function App() {
   ];
 
   const startGame = () => {
-    let newGameData = {};
-    newGameData.players = currentPlayersArray.map(
-      (playerEntry) => new activePlayer(playerEntry.id, playerEntry.name)
-    );
-    newGameData.currentTurn = 0;
-    newGameData.winnerID = null;
-    newGameData.winnerScore = null;
+    let newGameData = new game(currentPlayersArray)
     setGameData(newGameData);
     setActiveGame(true);
   };
@@ -95,13 +92,21 @@ function App() {
 
   return (
     <div>
-      <header>
+      <div className="menu-box">
         <p>This is just an example of SQL data: {playaData.playerName}</p>
         <div>
           {/* This is what is shown during a game of bowling */}
           {activeGame ? (
             <div>
               <p>Game Started!</p>
+              <ScoreInput 
+                gameData={gameData}
+                setGameData={setGameData}
+                buttonInput={buttonInput}
+                setButtonInput={setButtonInput}
+                currentInputValue={currentInputValue}
+                setCurrentInputValue={setCurrentInputValue}
+              />
               <button onClick={exitGame}>End Game</button>
               <ScoreCard gameData={gameData} />
             </div>
@@ -169,7 +174,7 @@ function App() {
             </div>
           )}
         </div>
-      </header>
+      </div>
     </div>
   );
 }

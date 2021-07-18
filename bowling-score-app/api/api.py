@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 import pymysql
 import json
 
@@ -40,3 +40,12 @@ def get_current_players():
     query = "SELECT * FROM bowling_score.players"
     response = dbGather(query)
     return json.dumps(response)
+
+
+@app.route('/submitScore', methods=['POST'])
+def submit_player_score():
+    playerId = str(request.json['playerId'])
+    playerScore = str(request.json['playerScore'])
+    query = 'UPDATE bowling_score.players SET lastGame = ' + playerScore + ' WHERE playerId = '+ playerId
+    dbInsert(query)
+    return ('', 204)

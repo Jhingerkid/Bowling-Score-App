@@ -13,4 +13,6 @@ CREATE TABLE `bowling_score`.`players` (
   
 # add a new player
 INSERT INTO bowling_score.players (playerName, playerAvg, lastGame, highScore, totalGames) VALUES 
-("Test Player", 130, 102, 210, 40);
+("Test Player 2", 130, 102, 210, 40);
+
+# submit a players most recent score

@@ -1,20 +1,16 @@
 import { useState, useEffect } from "react";
 import Modal from './Modal.js';
-import { newPlayerModal, deletePlayerModal } from "./modal_pages.js";
 import "./App.css";
 import {ScoreCard} from "./score-card";
 import {activePlayer} from "./active-player"
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
+  const [newPlayer, setNewPlayer] = useState(false);
+  const [deletePlayer, setDeletePlayer] = useState(false);
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
-  const [newPlayer, setNewPlayer] = useState(false);
-<<<<<<< HEAD
-  const [deletePlayer, setDeletePlayer] = useState(false);
-  const [playaData, setCurrentPlaya] = useState([]);
   const [currentPlayers, setCurrentPlayers] = useState([]);
-=======
 
   // This is a dummy array for testing purposes. Ready for Leaf to replace with an array built from the selection screen. 
   // Just let me know if you use a different format, and I'll change my functions to match.
@@ -52,7 +48,6 @@ const exitGame =  async () => {
   setActiveGame(false);
 }
 
->>>>>>> main
   useEffect(() => {
     async function getPlayerData() {
       let response = await fetch("/players");
@@ -73,18 +68,20 @@ const exitGame =  async () => {
     return currentPlayerList;
   }, [currentPlayers]);
 
-  // const newPlayerModal = <div>
-  //   <h3>Enter New Player Name:<input type="text" placeholder="Name"></input></h3>
-  //   {/* the next button should submit the name to make a new player */}
-  //   <button onClick={() => setNewPlayer(false)}>Submit</button>
-  // </div>
+  const newPlayerModal = <div>
+    <h3>Enter New Player Name:<input type="text" placeholder="Name"></input></h3>
+    {/* the next button should submit the name to make a new player */}
+    <button onClick={() => setNewPlayer(false)}>Submit</button>
+  </div>
 
-  // const deletePlayerModal = <div>
-  //   {/* The player list variable from backend goes here */}
-  //   {/* <input type="submit" onsubmit="setDeletePlayer(false)">Delete</input> */}
-  //   <input type="checkbox"></input>
-  //   <button onClick={() => setDeletePlayer(false)}>Delete</button>
-  // </div>
+  const deletePlayerModal = <div>
+    {/* The player list variable from backend goes here */}
+    {/* <input type="submit" onsubmit="setDeletePlayer(false)">Delete</input> */}
+    <input type="checkbox"></input>
+    {/*there should be a function right after setDeletePlayer beneath here to remove
+    the selected players from the sql database */}
+    <button onClick={() => setDeletePlayer(false)}>Delete</button>
+  </div>
 
 
 

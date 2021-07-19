@@ -14,7 +14,8 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   // const [playaData, setCurrentPlaya] = useState([]);
-  const [currentPlayers, setCurrentPlayers] = useState([]);
+  // const [currentPlayers, setCurrentPlayers] = useState([]);
+  const currentPlayers = []
 
   // This is a dummy array for testing purposes. Ready for Leaf to replace with an array built from the selection screen.
   // Just let me know if you use a different format, and I'll change my functions to match.
@@ -79,15 +80,26 @@ function App() {
 
   // This useEffect just puts each current player into a <li> for rendering
   let currentPlayerList = [];
-  // useEffect(() => {
-  //   for (let player of currentPlayers) {
-  //     currentPlayerList.push(<li>{player}</li>);
-  //   }
-  //   return currentPlayerList;
-  // }, [currentPlayers]);
+  useEffect(() => {
+    for (let player of currentPlayers) {
+      currentPlayerList.push(<li>{player}</li>);
+    }
+    return currentPlayerList;
+  }, [currentPlayers]);
 
-  function addCurrentPlayer(name) {
-    currentPlayerList.push(name)
+  function addCurrentPlayer(playerName, playerID) {
+    if (on = "yes") {
+      console.log("made it to the add part of function")
+      currentPlayers.push({name: playerName,
+      id: playerID})
+    }
+    else if (on = "no") {
+      console.log("made it to the remove part of function")
+      const index = currentPlayers.indexOf(playerID);
+      if (index > -1) {
+        currentPlayers.splice(index, 1);
+      }
+    }
   }
 
   const newPlayerModal = <div>
@@ -178,20 +190,25 @@ function App() {
                     <td>{player.lastGame}</td>
                     <td>{player.highScore}</td>
                     <td>
-                      <form action="/currentPlayer" method="POST">
-                        <input type="checkbox" name={player.playerID} onChange="this.form.submit();"></input>
+                      <form action="addCurrentPlayer(player.playerName, player.playerID)" method="POST">
+                        <input
+                          on={value.toString()}
+                          type="checkbox"
+                          name="currentPlayerCheckbox"
+                          onChange="this.form.submit();">
+                        </input>
                       </form>
                     </td>
                   </tr>)}
                   {/* this next <tr> is just test data */}
                   <tr>
                     <td>bob</td>
-                    <td>22</td>
+                    <td>65</td>
                     <td>2</td>
                     <td>60</td>
                     <td>70</td>
                     <td>
-                      <button onClick={addCurrentPlayer("obby")}>Select</button>
+                      <button onClick={addCurrentPlayer("bobby", 2)}>Select</button>
                       {/* <form action="/currentPlayers" method="POST">
                         <input type="checkbox" onChange="this.form.submit();"></input>
                       </form> */}
@@ -199,11 +216,20 @@ function App() {
                   </tr>
                 </tbody>
               </table>
+
+              <h2>Search for a Player</h2>
+              <form action="/searchForPlayers" method="GET">
+                <input type="text" placeholder="Search..."></input>
+                <input type="submit" on value="See Results"></input>
+              </form>
+              {/* <ol>
+                  {searchedPlayers.map((player) =>
+                  <li>{player.playerName}</li>
+                  )}
+              </ol> */}
               <h2>Currently Selected Players:</h2>
               <ol>{currentPlayerList}</ol>
-              <button onClick={() => setDeletePlayer(true)}>
-                Delete Player
-              </button>
+              <button onClick={() => setDeletePlayer(true)}>Delete Player</button>
               <button onClick={() => setNewPlayer(true)}>New Player</button>
               <button onClick={startGame}>Start Game</button>
               {/* both of these buttons below can be deleted, they're there for testing purposes now */}

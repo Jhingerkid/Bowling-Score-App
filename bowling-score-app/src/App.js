@@ -35,6 +35,8 @@ function App() {
   ];
 
   const startGame = () => {
+    // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
+    // (assuming my untested code works properly, hahae)
     let newGameData = new game(currentPlayersArray)
     setGameData(newGameData);
     setActiveGame(true);
@@ -87,13 +89,12 @@ function App() {
     return currentPlayerList;
   }, [currentPlayers]);
 
-  function addCurrentPlayer(playerName, playerID) {
-    if (on = "yes") {
+  function addCurrentPlayer(playerName, playerID, value) {
+    if (value = "yes") {
       console.log("made it to the add part of function")
-      currentPlayers.push({name: playerName,
-      id: playerID})
+      currentPlayers.push({name: playerName, id: playerID})
     }
-    else if (on = "no") {
+    else if (value = "no") {
       console.log("made it to the remove part of function")
       const index = currentPlayers.indexOf(playerID);
       if (index > -1) {
@@ -190,11 +191,16 @@ function App() {
                     <td>{player.lastGame}</td>
                     <td>{player.highScore}</td>
                     <td>
-                      <form action="addCurrentPlayer(player.playerName, player.playerID)" method="POST">
+                      <form action="addCurrentPlayer(player.playerName, player.playerID, on)" method="POST">
                         <input
-                          on={value.toString()}
+                        type="hidden"
+                        value="no"
+                        name={player.playerID}>
+                        </input>
+                        <input
+                          value="yes"
                           type="checkbox"
-                          name="currentPlayerCheckbox"
+                          name={player.playerID}
                           onChange="this.form.submit();">
                         </input>
                       </form>

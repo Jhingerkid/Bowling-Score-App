@@ -162,7 +162,7 @@ function App() {
                     <td>{player.totalGames}</td>
                     <td>{player.lastGame}</td>
                     <td>{player.highScore}</td>
-                    <td><input type="checkbox" name={player.playerID}></input></td>
+                    <td><input type="checkbox" name={player.playerName}></input></td>
                   </tr>)}
       
                   <tr>
@@ -173,7 +173,7 @@ function App() {
                     <td>70</td>
                     {/* the setCurrentPlayers useState below should dynamically select the right player */}
                     <td>
-                      <form action="">
+                      <form action="/newPlayer" method="POST">
                         <input type="checkbox" onChange="this.form.submit();"></input>
                       </form>
                     </td>

@@ -4,7 +4,7 @@ import "./App.css";
 import { ScoreCard } from "./score-card";
 import { game } from "./game";
 import { ScoreInput } from "./score-input";
-import { sendWinnerData, createNewPlayer } from "./api-functions";
+import { sendWinnerData, createNewPlayer, sendGameData } from "./api-functions";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
@@ -24,15 +24,14 @@ function App() {
   const startGame = () => {
     // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
     // (assuming my untested code works properly, hahae)
-    let newGameData = new game(currentPlayersArray);
+    let newGameData = new game(currentPlayers);
     setGameData(newGameData);
     setActiveGame(true);
   };
 
   const exitGame = async () => {
     if (gameData.winnerID) {
-      // sql call for tom to add
-      // await sendWinnerData(gameData.winnerID, gameData.winnerScore);
+      await sendGameData(gameData.players)
     }
     setGameData({});
     setActiveGame(false);

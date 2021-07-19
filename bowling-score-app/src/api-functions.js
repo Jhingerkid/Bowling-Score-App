@@ -15,3 +15,9 @@ export function createNewPlayer(playerName) {
     headers: { "Content-Type": "application/json" },
   });
 }
+
+export function sendGameData(playersArray) {
+  let data = playersArray.map(playerObj => ({ playerId: playerObj.playerId, playerScore: playerObj.playerTotal}))
+  //send data to backend here
+  return
+}

@@ -57,3 +57,10 @@ def submit_player_score():
     query = 'UPDATE bowling_score.players SET lastGame = ' + playerScore + ' WHERE playerId = '+ playerId
     dbInsert(query)
     return ('', 204)
+
+@app.route('/playerSearch')
+def search_players():
+    playerName = request.json['playerName']
+    query = 'SELECT * FROM bowling_score.players WHERE playerName LIKE "%'+ playerName +'%";'
+    response = dbGather(query)
+    return json.dumps(response)

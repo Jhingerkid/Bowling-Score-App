@@ -15,7 +15,7 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]); // using dummy data above
   // const [currentPlayers, setCurrentPlayers] = useState([]);
-  const currentPlayers = [];
+  const currentPlayers = [{playerName: "Jim", id: 1}, {playerName: "Ben", id: 2}];
 
   // This is a dummy array for testing purposes. Ready for Leaf to replace with an array built from the selection screen.
   // Just let me know if you use a different format, and I'll change my functions to match.

@@ -8,7 +8,7 @@ export class game {
   winnerName;
   winnerScore;
   addScore;
-  nextTurn;
+  nextShot;
   getWinner;
 
   constructor(playersArray) {
@@ -23,7 +23,7 @@ export class game {
 	this.winnerName = null;
 	this.winnerScore = null;
 	this.addScore = this.addScore;
-	this.nextTurn = this.nextTurn;
+	this.nextShot = this.nextShot;
 	this.getWinner = this.getWinner;
   }
 
@@ -84,7 +84,7 @@ export class game {
 		this.shot += 1;
 		this.firstShot = false;
 		if(this.shot === 19 && this.players[this.turn].playerPins === 0){
-			this.players[this.turn].playerPins === 10;
+			this.players[this.turn].playerPins = 10;
 		}
 		return;
 	}
@@ -92,7 +92,7 @@ export class game {
 	else if(this.shot === 19 && ((this.players[this.turn].playerFrames.scores[18] === "X") || (this.players[this.turn].playerFrames.scores[19] === "/"))){
 		this.shot = 20;
 		if(this.players[this.turn].playerPins === 0){
-			this.players[this.turn].playerPins === 10;
+			this.players[this.turn].playerPins = 10;
 		}
 		return;
 	}
@@ -136,6 +136,8 @@ export class game {
 		this.winnerName = playerObj.playerName;
 	  }
 	}
+	this.turn = 0
+	this.players.forEach((playerObj) => (playerObj.playerPins = 10));
 	return;
   }
 }

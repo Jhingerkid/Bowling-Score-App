@@ -72,11 +72,15 @@ function App() {
 
   const newPlayerModal = (
     <div>
-      <form action="/newPlayer" method="POST">
+      <form>
         <h3>
           Enter New Player Name:<input type="text" placeholder="Name"></input>
         </h3>
-        <button type="submit" onSubmit={() => setNewPlayer(false)}>
+        <button
+          type="submit"
+          onSubmit={() => setNewPlayer(false)}
+          // , createNewPlayer("Mike")
+        >
           Submit
         </button>
       </form>
@@ -87,8 +91,10 @@ function App() {
     <div>
       <table>
         <thead>
-          <th>Player</th>
-          <th>Delete?</th>
+          <tr>
+            <th>Player</th>
+            <th>Delete?</th>
+          </tr>
         </thead>
         <tbody>
           {console.log("delModal", playaData)}
@@ -97,9 +103,11 @@ function App() {
               <td>{player.playerName}</td>
               <td>
                 <form action="/deletePlayer" method="POST">
-                  <input type="submit" name={player.playerID}>
-                    Delete
-                  </input>
+                  <input
+                    value="Delete"
+                    type="submit"
+                    name={player.playerID}
+                  ></input>
                 </form>
               </td>
             </tr>
@@ -183,7 +191,7 @@ function App() {
                             value="yes"
                             type="checkbox"
                             name={player.playerID}
-                            onChange="this.form.submit();"
+                            onChange={() => this.form.submit()}
                           ></input>
                         </form>
                       </td>
@@ -232,13 +240,6 @@ function App() {
                 }}
               >
                 Send Score Test
-              </button>
-              <button
-                onClick={() => {
-                  createNewPlayer("Jimothy");
-                }}
-              >
-                Add New Player Test
               </button>
             </div>
           )}

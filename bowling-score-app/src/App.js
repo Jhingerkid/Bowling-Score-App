@@ -1,12 +1,15 @@
 import { useState, useEffect } from "react";
 import Modal from './Modal.js';
 import "./App.css";
-import { ScoreCard } from "./score-card";
-import { activePlayer } from "./active-player";
+import {ScoreCard} from "./score-card";
+import { game } from "./game"
+import { ScoreInput } from "./score-input";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
   const [newPlayer, setNewPlayer] = useState(false);
+  const [buttonInput, setButtonInput] = useState(false);
+  const [currentInputValue, setCurrentInputValue] = useState(0);
   const [deletePlayer, setDeletePlayer] = useState(false);
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
@@ -31,13 +34,7 @@ function App() {
   ];
 
   const startGame = () => {
-    let newGameData = {};
-    newGameData.players = currentPlayersArray.map(
-      (playerEntry) => new activePlayer(playerEntry.id, playerEntry.name)
-    );
-    newGameData.currentTurn = 0;
-    newGameData.winnerID = null;
-    newGameData.winnerScore = null;
+    let newGameData = new game(currentPlayersArray)
     setGameData(newGameData);
     setActiveGame(true);
   };
@@ -60,10 +57,20 @@ function App() {
     });
   }
 
+  function createNewPlayer(playerName) {
+    let data = { playerName: playerName };
+    fetch("/newPlayer", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   useEffect(() => {
     async function getPlayerData() {
       let response = await fetch("/players");
       let player = await response.json();
+      console.log(player);
       setPlayaData(player[0]);
     }
     getPlayerData();
@@ -96,13 +103,21 @@ function App() {
 
   return (
     <div>
-      <header>
+      <div className="menu-box">
         <p>This is just an example of SQL data: {playaData.playerName}</p>
         <div>
           {/* This is what is shown during a game of bowling */}
           {activeGame ? (
             <div>
               <p>Game Started!</p>
+              <ScoreInput 
+                gameData={gameData}
+                setGameData={setGameData}
+                buttonInput={buttonInput}
+                setButtonInput={setButtonInput}
+                currentInputValue={currentInputValue}
+                setCurrentInputValue={setCurrentInputValue}
+              />
               <button onClick={exitGame}>End Game</button>
               <ScoreCard gameData={gameData} />
             </div>
@@ -172,6 +187,7 @@ function App() {
               </button>
               <button onClick={() => setNewPlayer(true)}>New Player</button>
               <button onClick={startGame}>Start Game</button>
+              {/* both of these buttons below can be deleted, they're there for testing purposes now */}
               <button
                 onClick={() => {
                   sendWinnerData(2, 200);
@@ -179,10 +195,17 @@ function App() {
               >
                 Send Score Test
               </button>
+              <button
+                onClick={() => {
+                  createNewPlayer("Jimothy");
+                }}
+              >
+                Add New Player Test
+              </button>
             </div>
           )}
         </div>
-      </header>
+      </div>
     </div>
   );
 }

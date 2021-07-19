@@ -78,33 +78,48 @@ function App() {
   console.log("Object Information", playaData);
 
   // This useEffect just puts each current player into a <li> for rendering
-  useEffect(() => {
-    let currentPlayerList = [];
-    for (let player of currentPlayers) {
-      currentPlayerList.push(<li>{player}</li>);
-    }
-    return currentPlayerList;
-  }, [currentPlayers]);
+  let currentPlayerList = [];
+  // useEffect(() => {
+  //   for (let player of currentPlayers) {
+  //     currentPlayerList.push(<li>{player}</li>);
+  //   }
+  //   return currentPlayerList;
+  // }, [currentPlayers]);
+
+  function addCurrentPlayer(name) {
+    currentPlayerList.push(name)
+  }
 
   const newPlayerModal = <div>
-    <h3>Enter New Player Name:<input type="text" placeholder="Name"></input></h3>
-    {/* the next button should submit the name to make a new player */}
-    <button onClick={() => setNewPlayer(false)}>Submit</button>
+    <form action="/newPlayer" method="POST">
+      <h3>Enter New Player Name:<input type="text" placeholder="Name"></input></h3>
+      <button type="submit" onSubmit={() => setNewPlayer(false)}>Submit</button>
+    </form>
   </div>
 
   const deletePlayerModal = <div>
-    {/* The player list variable from backend goes here */}
-    {/* <input type="submit" onsubmit="setDeletePlayer(false)">Delete</input> */}
-    <input type="checkbox"></input>
-    {/*there should be a function right after setDeletePlayer beneath here to remove
-    the selected players from the sql database */}
-    <button onClick={() => setDeletePlayer(false)}>Delete</button>
+    <table>
+      <thead>
+        <th>Player</th>
+        <th>Delete?</th>
+      </thead>
+      <tbody>
+        {playaData.map((player) =>
+          <tr>
+            <td>{player.playerName}</td>
+            <td>
+              <form action="/deletePlayer" method="POST">
+                <input type="submit" name={player.playerID}>Delete</input>
+              </form>
+            </td>
+          </tr>)}
+      </tbody>
+    </table>
   </div>
 
   return (
     <div>
       <div className="menu-box">
-        <p>This is just an example of SQL data: {playaData.playerName}</p>
         <div>
           {/* This is what is shown during a game of bowling */}
           {activeGame ? (
@@ -162,26 +177,30 @@ function App() {
                     <td>{player.totalGames}</td>
                     <td>{player.lastGame}</td>
                     <td>{player.highScore}</td>
-                    <td><input type="checkbox" name={player.playerName}></input></td>
+                    <td>
+                      <form action="/currentPlayer" method="POST">
+                        <input type="checkbox" name={player.playerID} onChange="this.form.submit();"></input>
+                      </form>
+                    </td>
                   </tr>)}
-      
+                  {/* this next <tr> is just test data */}
                   <tr>
                     <td>bob</td>
                     <td>22</td>
                     <td>2</td>
                     <td>60</td>
                     <td>70</td>
-                    {/* the setCurrentPlayers useState below should dynamically select the right player */}
                     <td>
-                      <form action="/newPlayer" method="POST">
+                      <button onClick={addCurrentPlayer("obby")}>Select</button>
+                      {/* <form action="/currentPlayers" method="POST">
                         <input type="checkbox" onChange="this.form.submit();"></input>
-                      </form>
+                      </form> */}
                     </td>
                   </tr>
                 </tbody>
               </table>
               <h2>Currently Selected Players:</h2>
-              <ol>{currentPlayers}</ol>
+              <ol>{currentPlayerList}</ol>
               <button onClick={() => setDeletePlayer(true)}>
                 Delete Player
               </button>

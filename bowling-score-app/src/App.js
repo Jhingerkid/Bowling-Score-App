@@ -68,7 +68,7 @@ function App() {
     }
     getPlayerData();
   }, []);
-  // console.log("Object Information", playaData);
+  console.log("Object Information", playaData);
 
   // This useEffect just puts each current player into a <li> for rendering
   useEffect(() => {
@@ -134,21 +134,33 @@ function App() {
                     <th>Name</th>
                     <th>Average Score</th>
                     <th>Total Games Played</th>
+                    <th>Last Game Score</th>
                     <th>Highscore</th>
                     <th>Select</th>
                   </tr>
                 </thead>
                 <tbody>
+                  {playaData.map((player) =>
+                  <tr>
+                    <td>{player.playerName}</td>
+                    <td>{player.playerAvg}</td>
+                    <td>{player.totalGames}</td>
+                    <td>{player.lastGame}</td>
+                    <td>{player.highScore}</td>
+                    <td><input type="checkbox" name={player.playerID}></input></td>
+                  </tr>)}
+      
                   <tr>
                     <td>bob</td>
                     <td>22</td>
                     <td>2</td>
                     <td>60</td>
+                    <td>70</td>
                     {/* the setCurrentPlayers useState below should dynamically select the right player */}
                     <td>
-                      <button onClick={() => setCurrentPlayers("bob")}>
-                        Select
-                      </button>
+                      <form action="">
+                        <input type="checkbox" onChange="this.form.submit();"></input>
+                      </form>
                     </td>
                   </tr>
                 </tbody>

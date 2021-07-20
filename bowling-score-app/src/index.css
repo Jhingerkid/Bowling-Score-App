@@ -12,6 +12,12 @@ body {
   color: rgb(0, 107, 184);
 }
 
+.colored {
+  background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
+  background-clip: text;
+  color: transparent;
+}
+
 h1, h2, h3, p {
   color: white;
 }
@@ -100,5 +106,9 @@ input:focus{
 }
 
 .congrats-box {
-  height: 170px;
+  display: flex;
+  align-content: space-between;
+  height: 14vh;
 }
+
+

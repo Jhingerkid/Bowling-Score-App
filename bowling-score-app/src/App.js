@@ -4,12 +4,7 @@ import "./App.css";
 import { ScoreCard } from "./score-card";
 import { game } from "./game";
 import { ScoreInput } from "./score-input";
-import {
-  sendWinnerData,
-  createNewPlayer,
-  sendGameData,
-  deletePlayerDB,
-} from "./api-functions";
+import { createNewPlayer, sendGameData, deletePlayerDB } from "./api-functions";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
@@ -20,13 +15,15 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  // const [currentPlayers, setCurrentPlayers] = useState([]);
+  const testWinners = [
+    { playerId: 91, playerTotal: 40 },
+    { playerId: 92, playerTotal: 90 },
+  ];
   var currentPlayers = [];
 
   async function getPlayerData() {
     let response = await fetch("/players");
     let player = await response.json();
-    console.log("playadata was fetched", player);
     setPlayaData(player);
   }
 
@@ -59,10 +56,6 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    console.log("current players", currentPlayers);
-  }, [currentPlayers]);
-
   const startGame = () => {
     // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
     // (assuming my untested code works properly, hahae)
@@ -72,6 +65,7 @@ function App() {
   };
 
   const exitGame = async () => {
+    console.log("game ended", gameData);
     if (gameData.winnerID) {
       await sendGameData(gameData.players);
     }
@@ -219,7 +213,7 @@ function App() {
               {/* both of these buttons below can be deleted, they're there for testing purposes now */}
               <button
                 onClick={() => {
-                  sendWinnerData(2, 200);
+                  sendGameData(testWinners);
                 }}
               >
                 Send Score Test

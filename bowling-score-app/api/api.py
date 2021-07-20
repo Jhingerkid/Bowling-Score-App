@@ -42,6 +42,14 @@ def get_current_players():
     response = dbGather(query)
     return json.dumps(response)
 
+@app.route('/playerStats', methods=['POST'])
+def get_player_stats():
+    print("playerstats",request.json)
+    # # query = "SELECT * FROM bowling_score.players"
+    # # response = dbGather(query)
+    # return json.dumps(response)
+    return ('', 204)
+
 
 @app.route('/newPlayer', methods=['POST'])
 def submit_new_player():
@@ -53,10 +61,19 @@ def submit_new_player():
 
 @app.route('/submitScore', methods=['POST'])
 def submit_player_score():
-    playerId = str(request.json['playerId'])
-    playerScore = str(request.json['playerScore'])
-    query = 'UPDATE bowling_score.players SET lastGame = ' + playerScore + ' WHERE playerId = '+ playerId
-    dbInsert(query)
+    # runningQuery = ""
+    for player in request.json:
+        playerId = str(player['playerId'])
+        playerScore = str(player['playerScore'])
+        query = 'UPDATE bowling_score.players SET lastGame = ' + playerScore + ' WHERE playerId = '+ playerId + '; '
+        dbInsert(query)
+        # print("playerId", type(playerId), playerId)
+        # print("playerScore", type(playerScore), playerScore)
+        # print("query", type(query), query)
+        # runningQuery = runningQuery + query
+        # print("runningQuery", type(runningQuery), runningQuery)
+    # print("beforeSend", runningQuery)
+    # dbInsert(runningQuery) // the syntax is correct but for some reason it throws an error
     return ('', 204)
 
 @app.route('/deletePlayer', methods=['POST'])

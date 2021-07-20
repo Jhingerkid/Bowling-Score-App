@@ -9,27 +9,45 @@ export const createNewPlayer = async (playerName) => {
 
 export async function sendGameData(playersArray) {
   let data = playersArray.map((playerObj) => ({
-    playerId: playerObj.playerId,
+    playerId: playerObj.playerID,
     playerScore: playerObj.playerTotal,
   }));
-  console.log(getPlayerStats(data));
-  console.log(data);
-  fetch("/submitScore", {
+  await fetch("/submitScore", {
     method: "POST",
     body: JSON.stringify(data),
+    headers: { "Content-Type": "application/json" },
+  });
+  let stuff = await getPlayerStats(data);
+  var statUpdates = []; // I should use a .map but time constraints and bugs are rough, forgive me
+  stuff.forEach((person) => {
+    if (person[0].lastGame > person[0].highScore) {
+      person[0].highScore = person[0].lastGame;
+    }
+    person[0].totalGames = person[0].totalGames + 1;
+    person[0].playerAvg =
+      (person[0].playerAvg * person[0].totalGames + person[0].lastGame) /
+        person[0].totalGames +
+      1;
+    statUpdates.push(person);
+  });
+  console.log("new stats", statUpdates);
+  await fetch("/submitStats", {
+    method: "POST",
+    body: JSON.stringify(statUpdates),
     headers: { "Content-Type": "application/json" },
   });
   return;
 }
 
 async function getPlayerStats(data) {
-  let playaStats = await fetch("/playerStats", {
+  await fetch("/playerStats", {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },
   });
-  let statistics = await playaStats.json();
-  return statistics;
+  let response = await fetch("/playerStats");
+  let player = await response.json();
+  return player;
 }
 
 export function deletePlayerDB(playerId, playaData, setPlayaData) {

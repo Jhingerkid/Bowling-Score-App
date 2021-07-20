@@ -1,6 +1,7 @@
 from flask import Flask, request
 import pymysql
 import json
+import time
 
 
 app = Flask(__name__)
@@ -55,5 +56,12 @@ def submit_player_score():
     playerId = str(request.json['playerId'])
     playerScore = str(request.json['playerScore'])
     query = 'UPDATE bowling_score.players SET lastGame = ' + playerScore + ' WHERE playerId = '+ playerId
+    dbInsert(query)
+    return ('', 204)
+
+@app.route('/deletePlayer', methods=['POST'])
+def delete_player():
+    playerId = str(request.json['playerId'])
+    query = 'DELETE FROM bowling_score.players WHERE playerId = ' + playerId + ''
     dbInsert(query)
     return ('', 204)

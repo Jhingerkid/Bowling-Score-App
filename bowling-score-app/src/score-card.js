@@ -26,7 +26,7 @@ const PlayerRow = ({playerObj}) => {
     let chanceScores = playerObj.playerFrames.scores.map(chanceScore => <td>{chanceScore}</td>)
     let frameTotals = playerObj.playerFrames.totals.map(frameTotal => <td colSpan="2">{frameTotal}</td>)
     frameTotals.splice(9, 1, <td colSpan="3">{playerObj.playerFrames.totals[9]}</td>)
-    return <tbody id={`player-${playerObj.id}`} >
+    return <tbody id={`player-${playerObj.playerID}`} >
         <tr>
             <td className="player-name" rowSpan="2"> {playerObj.playerName} </td>
             {chanceScores}

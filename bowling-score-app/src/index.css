@@ -98,3 +98,7 @@ input:focus{
 .checkbox:hover {
   box-shadow: none;
 }
+
+.congrats-box {
+  height: 170px;
+}

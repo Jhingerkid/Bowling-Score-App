@@ -81,7 +81,6 @@ def submit_player_stats():
         highScore = str(player[0]['highScore'])
         totalGames = str(player[0]['totalGames'])
         query = 'UPDATE bowling_score.players SET playerAvg = ' + playerAvg + ', highScore = ' + highScore + ', totalGames = ' + totalGames + ' WHERE playerId = '+ playerId
-        print(query)
         dbInsert(query)
     return ('', 204)
 

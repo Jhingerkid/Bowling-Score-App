@@ -4,7 +4,12 @@ import "./App.css";
 import { ScoreCard } from "./score-card";
 import { game } from "./game";
 import { ScoreInput } from "./score-input";
-import { sendWinnerData, createNewPlayer, sendGameData } from "./api-functions";
+import {
+  sendWinnerData,
+  createNewPlayer,
+  sendGameData,
+  deletePlayerDB,
+} from "./api-functions";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
@@ -13,13 +18,44 @@ function App() {
   const [currentInputValue, setCurrentInputValue] = useState(0);
   const [deletePlayer, setDeletePlayer] = useState(false);
   const [gameData, setGameData] = useState({});
-  const [playaData, setPlayaData] = useState([]); // using dummy data above
-  // const [currentPlayers, setCurrentPlayers] = useState([]);
-  const currentPlayers = [{playerName: "Jim", id: 1}, {playerName: "Ben", id: 2}];
+  const [playaData, setPlayaData] = useState([]);
+  const [newPlayerName, setNewPlayerName] = useState("");
+  const [currentPlayers, setCurrentPlayers] = useState([]);
 
-  // This is a dummy array for testing purposes. Ready for Leaf to replace with an array built from the selection screen.
-  // Just let me know if you use a different format, and I'll change my functions to match.
-  const currentPlayersArray = playaData;
+  async function getPlayerData() {
+    let response = await fetch("/players");
+    let player = await response.json();
+    console.log("playadata was fetched", player);
+    setPlayaData(player);
+  }
+
+  function updateNewPlayer() {
+    createNewPlayer(newPlayerName);
+    getPlayerData();
+    setNewPlayer(false);
+  }
+
+  function updateCurrentPlayers(playerId, playerName) {
+    var newCurrentPlayers = [];
+    let newCurPlayer = { playerName: playerName, playerId: playerId };
+    currentPlayers.forEach((player) => {
+      if (playerId === player.playerId) {
+        console.log("is a dupe");
+        newCurrentPlayers = currentPlayers.filter(
+          (curPlayer) => curPlayer.playerId !== playerId
+        );
+        setCurrentPlayers(newCurrentPlayers);
+      } else {
+        console.log("not a dupe");
+        newCurrentPlayers.push(newCurPlayer);
+        setCurrentPlayers(newCurrentPlayers);
+      }
+    });
+  }
+
+  useEffect(() => {
+    console.log("current players", currentPlayers);
+  }, [currentPlayers]);
 
   const startGame = () => {
     // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
@@ -31,58 +67,28 @@ function App() {
 
   const exitGame = async () => {
     if (gameData.winnerID) {
-      await sendGameData(gameData.players)
+      await sendGameData(gameData.players);
     }
     setGameData({});
     setActiveGame(false);
   };
 
   useEffect(() => {
-    async function getPlayerData() {
-      let response = await fetch("/players");
-      let player = await response.json();
-      console.log(player);
-      setPlayaData(player);
-    }
     getPlayerData();
   }, []);
 
-  // This useEffect just puts each current player into a <li> for rendering
-  let currentPlayerList = [];
-  useEffect(() => {
-    for (let player of currentPlayers) {
-      currentPlayerList.push(<li>{player}</li>);
-    }
-    return currentPlayerList;
-  }, [currentPlayers]);
-
-  function addCurrentPlayer(playerName, playerID, value) {
-    if ((value = "yes")) {
-      console.log("made it to the add part of function");
-      currentPlayers.push({ name: playerName, id: playerID });
-    } else if ((value = "no")) {
-      console.log("made it to the remove part of function");
-      const index = currentPlayers.indexOf(playerID);
-      if (index > -1) {
-        currentPlayers.splice(index, 1);
-      }
-    }
-  }
-
   const newPlayerModal = (
     <div>
-      <form>
-        <h3>
-          Enter New Player Name:<input type="text" placeholder="Name"></input>
-        </h3>
-        <button
-          type="submit"
-          onSubmit={() => setNewPlayer(false)}
-          // , createNewPlayer("Mike")
-        >
-          Submit
-        </button>
-      </form>
+      <h3>
+        Enter New Player Name:
+        <input
+          value={newPlayerName}
+          type="text"
+          placeholder="Name"
+          onInput={(e) => setNewPlayerName(e.target.value)}
+        ></input>
+      </h3>
+      <button onClick={() => updateNewPlayer()}>Submit</button>
     </div>
   );
 
@@ -96,18 +102,18 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {console.log("delModal", playaData)}
           {playaData.map((player) => (
             <tr>
               <td>{player.playerName}</td>
               <td>
-                <form action="/deletePlayer" method="POST">
-                  <input
-                    value="Delete"
-                    type="submit"
-                    name={player.playerID}
-                  ></input>
-                </form>
+                <input
+                  value="Delete"
+                  type="button"
+                  name={player.playerId}
+                  onClick={() =>
+                    deletePlayerDB(player.playerId, playaData, setPlayaData)
+                  }
+                ></input>
               </td>
             </tr>
           ))}
@@ -177,41 +183,25 @@ function App() {
                       <td>{player.lastGame}</td>
                       <td>{player.highScore}</td>
                       <td>
-                        <form
-                          action="addCurrentPlayer(player.playerName, player.playerID, on)"
-                          method="POST"
-                        >
-                          <input
-                            type="hidden"
-                            value="no"
-                            name={player.playerID}
-                          ></input>
-                          <input
-                            value="yes"
-                            type="checkbox"
-                            name={player.playerID}
-                            onChange={() => this.form.submit()}
-                          ></input>
-                        </form>
+                        <input
+                          type="hidden"
+                          value="no"
+                          name={player.playerId}
+                        ></input>
+                        <input
+                          value="yes"
+                          type="checkbox"
+                          name={player.playerId}
+                          onClick={() =>
+                            updateCurrentPlayers(
+                              player.playerId,
+                              player.playerName
+                            )
+                          }
+                        ></input>
                       </td>
                     </tr>
                   ))}
-                  {/* this next <tr> is just test data */}
-                  <tr>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>
-                      <button onClick={addCurrentPlayer("bobby", 2)}>
-                        Select
-                      </button>
-                      {/* <form action="/currentPlayers" method="POST">
-                        <input type="checkbox" onChange="this.form.submit();"></input>
-                      </form> */}
-                    </td>
-                  </tr>
                 </tbody>
               </table>
 
@@ -226,7 +216,7 @@ function App() {
                   )}
               </ol> */}
               <h2>Currently Selected Players:</h2>
-              <ol>{currentPlayerList}</ol>
+              {/* <span>{currentPlayers}</span> */}
               <button onClick={() => setDeletePlayer(true)}>
                 Delete Player
               </button>

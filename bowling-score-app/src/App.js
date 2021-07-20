@@ -204,6 +204,7 @@ function App() {
                             value="yes"
                             type="checkbox"
                             name={player.playerId}
+                            className="checkbox"
                             onClick={() =>
                               updateCurrentPlayers(
                                 player.playerId,

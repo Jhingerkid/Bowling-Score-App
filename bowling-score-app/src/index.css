@@ -94,3 +94,7 @@ input:focus{
   justify-content: center;
   padding: 3vh;
 }
+
+.checkbox:hover {
+  box-shadow: none;
+}

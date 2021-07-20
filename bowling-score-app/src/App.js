@@ -58,10 +58,11 @@ function App() {
   }, [currentPlayers]);
 
   function addCurrentPlayer(playerName, playerID, value) {
-    if ((value = "yes")) {
+    if (value === "yes") {
       console.log("made it to the add part of function");
       currentPlayers.push({ name: playerName, id: playerID });
-    } else if ((value = "no")) {
+    }
+    else if (value === "no") {
       console.log("made it to the remove part of function");
       const index = currentPlayers.indexOf(playerID);
       if (index > -1) {
@@ -179,7 +180,7 @@ function App() {
                       <td>{player.highScore}</td>
                       <td>
                         <form
-                          action="addCurrentPlayer(player.playerName, player.playerID, on)"
+                          action="addCurrentPlayer(player.playerName, player.playerID, value)"
                           method="POST"
                         >
                           <input
@@ -188,31 +189,15 @@ function App() {
                             name={player.playerID}
                           ></input>
                           <input
-                            value="yes"
                             type="checkbox"
+                            value="yes"
                             name={player.playerID}
-                            onChange={() => this.form.submit()}
+                            onChange={() => addCurrentPlayer(player.playerName, player.playerID, this.value)}
                           ></input>
                         </form>
                       </td>
                     </tr>
                   ))}
-                  {/* this next <tr> is just test data */}
-                  <tr>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>
-                      <button onClick={addCurrentPlayer("bobby", 2)}>
-                        Select
-                      </button>
-                      {/* <form action="/currentPlayers" method="POST">
-                        <input type="checkbox" onChange="this.form.submit();"></input>
-                      </form> */}
-                    </td>
-                  </tr>
                 </tbody>
               </table>
 

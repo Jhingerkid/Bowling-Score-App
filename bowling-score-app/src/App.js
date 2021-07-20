@@ -91,7 +91,7 @@ function App() {
   }, []);
 
   const newPlayerModal = (
-    <div>
+    <div className="bigLabel">
       <h3>
         Enter New Player Name:
         <input
@@ -100,8 +100,8 @@ function App() {
           placeholder="Name"
           onInput={(e) => setNewPlayerName(e.target.value)}
         ></input>
+        <button onClick={() => updateNewPlayer()}>Submit</button>
       </h3>
-      <button onClick={() => updateNewPlayer()}>Submit</button>
     </div>
   );
 
@@ -175,7 +175,9 @@ function App() {
           ) : (
             // This is the home page where you navigate to whatever you need
             <div>
-              <h1>Select Players</h1>
+              <div className="bigLabel">
+                <h1>Select Players</h1>
+              </div>
               <div className="scroll">
                 <table>
                   <thead>
@@ -219,22 +221,15 @@ function App() {
                   </tbody>
                 </table>
               </div>
-              {/* <h2>Currently Selected Players:</h2> */}
-              <button onClick={() => setDeletePlayer(true)}>
-                Delete Player
-              </button>
-              <button onClick={() => setNewPlayer(true)}>New Player</button>
-              {tooManyPlayers ? <p>Too many players to start game!</p>
-              : <button onClick={startGame}>Start Game</button>}
-              
-              {/* both of these buttons below can be deleted, they're there for testing purposes now */}
-              <button
-                onClick={() => {
-                  sendWinnerData(2, 200);
-                }}
-              >
-                Send Score Test
-              </button>
+              <div className="bottomButtons">
+                <button onClick={() => setDeletePlayer(true)}>
+                  Delete Player
+                </button>
+                <button onClick={() => setNewPlayer(true)}>New Player</button>
+                {/* {tooManyPlayers ? <p>Too many players to start game!</p>
+                : <button onClick={startGame}>Start Game</button>} */}
+                <button onClick={startGame}>Start Game</button>
+              </div>
             </div>
           )}
         </div>

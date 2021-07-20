@@ -28,6 +28,7 @@ td {
   border-width: 3px;
   height: 30px;
   padding: 6px;
+  width: 100vh;
 }
 
 button {
@@ -80,17 +81,16 @@ input:focus{
 }
 
 .scroll {
+  display: flex;
+  justify-content: center;
   height: 67vh;
   overflow-x: hidden;
   overflow-y: auto;
+  width: 100%;
 }
 
-/* div.scroll {
-  background-color: #fed9ff;
-  width: 600px;
-  height: 150px;
-  overflow-x: hidden;
-  overflow-y: auto;
-  text-align: center;
-  padding: 20px;
-} */
+.bottomButtons, .bigLabel {
+  display: flex;
+  justify-content: center;
+  padding: 3vh;
+}

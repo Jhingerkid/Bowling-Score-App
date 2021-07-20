@@ -23,14 +23,14 @@ export async function sendGameData(playersArray) {
     if (person[0].lastGame > person[0].highScore) {
       person[0].highScore = person[0].lastGame;
     }
+    let a = person[0].playerAvg * person[0].totalGames;
+    let b = person[0].lastGame;
+    let c = person[0].totalGames + 1;
+    let ab = a + b;
     person[0].totalGames = person[0].totalGames + 1;
-    person[0].playerAvg =
-      (person[0].playerAvg * person[0].totalGames + person[0].lastGame) /
-        person[0].totalGames +
-      1;
+    person[0].playerAvg = ab / c;
     statUpdates.push(person);
   });
-  console.log("new stats", statUpdates);
   await fetch("/submitStats", {
     method: "POST",
     body: JSON.stringify(statUpdates),

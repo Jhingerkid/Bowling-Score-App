@@ -20,9 +20,15 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [tooManyPlayers, setTooManyPlayers] = useState(false);
-  // const [currentPlayers, setCurrentPlayers] = useState([]);
   var currentPlayers = [];
+  
+  useEffect(() => {
+    getPlayerData();
+  }, []);
+  
+  useEffect(() => {
+    console.log("current players", currentPlayers);
+  }, [currentPlayers]);
 
   async function getPlayerData() {
     let response = await fetch("/players");
@@ -54,23 +60,17 @@ function App() {
         (curPlaya) => curPlaya.playerId !== playerId
       );
       currentPlayers = newCurPlayerList;
-      setTooManyPlayers(false);
       return;
     } else {
       currentPlayers.push(newCurPlayer);
     }
   }
 
-  useEffect(() => {
-    console.log("current players", currentPlayers);
-  }, [currentPlayers]);
-
   const startGame = () => {
     if (currentPlayers.length < 1) {
       return;
     }
     if (currentPlayers.length > 6) {
-      setTooManyPlayers(true);
       return;
     }
     let newGameData = new game(currentPlayers);
@@ -85,10 +85,6 @@ function App() {
     setGameData({});
     setActiveGame(false);
   };
-
-  useEffect(() => {
-    getPlayerData();
-  }, []);
 
   const newPlayerModal = (
     <div className="bigLabel">
@@ -139,7 +135,7 @@ function App() {
     <div>
       <div className="menu-box">
         <div>
-          {/* This is what is shown during a game of bowling */}
+          {/* This is what is shown during an active game of bowling */}
           {activeGame ? (
             <div>
               <p>Game Started!</p>
@@ -226,8 +222,6 @@ function App() {
                   Delete Player
                 </button>
                 <button onClick={() => setNewPlayer(true)}>New Player</button>
-                {/* {tooManyPlayers ? <p>Too many players to start game!</p>
-                : <button onClick={startGame}>Start Game</button>} */}
                 <button onClick={startGame}>Start Game</button>
               </div>
             </div>

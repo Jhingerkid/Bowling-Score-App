@@ -16,6 +16,7 @@ body {
   background-image: linear-gradient(to left, violet, indigo, blue, green, yellow, orange, red);
   background-clip: text;
   color: transparent;
+  margin-right: 1em;
 }
 
 h1, h2, h3, p {

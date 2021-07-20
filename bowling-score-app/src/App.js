@@ -20,7 +20,8 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  const [currentPlayers, setCurrentPlayers] = useState([]);
+  // const [currentPlayers, setCurrentPlayers] = useState([]);
+  var currentPlayers = [];
 
   async function getPlayerData() {
     let response = await fetch("/players");
@@ -36,21 +37,26 @@ function App() {
   }
 
   function updateCurrentPlayers(playerId, playerName) {
-    var newCurrentPlayers = [];
+    var dupe;
     let newCurPlayer = { playerName: playerName, playerId: playerId };
+    if (currentPlayers.length === 0) {
+      currentPlayers.push(newCurPlayer);
+      return;
+    }
     currentPlayers.forEach((player) => {
-      if (playerId === player.playerId) {
-        console.log("is a dupe");
-        newCurrentPlayers = currentPlayers.filter(
-          (curPlayer) => curPlayer.playerId !== playerId
-        );
-        setCurrentPlayers(newCurrentPlayers);
-      } else {
-        console.log("not a dupe");
-        newCurrentPlayers.push(newCurPlayer);
-        setCurrentPlayers(newCurrentPlayers);
+      if (player.playerId === playerId) {
+        dupe = true;
       }
     });
+    if (dupe) {
+      let newCurPlayerList = currentPlayers.filter(
+        (curPlaya) => curPlaya.playerId !== playerId
+      );
+      currentPlayers = newCurPlayerList;
+      return;
+    } else {
+      currentPlayers.push(newCurPlayer);
+    }
   }
 
   useEffect(() => {
@@ -204,19 +210,7 @@ function App() {
                   ))}
                 </tbody>
               </table>
-
-              <h2>Search for a Player</h2>
-              <form action="/searchForPlayers" method="GET">
-                <input type="text" placeholder="Search..."></input>
-                <input type="submit" on value="See Results"></input>
-              </form>
-              {/* <ol>
-                  {searchedPlayers.map((player) =>
-                  <li>{player.playerName}</li>
-                  )}
-              </ol> */}
-              <h2>Currently Selected Players:</h2>
-              {/* <span>{currentPlayers}</span> */}
+              {/* <h2>Currently Selected Players:</h2> */}
               <button onClick={() => setDeletePlayer(true)}>
                 Delete Player
               </button>

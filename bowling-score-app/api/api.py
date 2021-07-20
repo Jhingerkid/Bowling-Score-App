@@ -1,8 +1,9 @@
+from os import stat
 from flask import Flask, request
 import pymysql
 import json
-import time
 
+statistics = []
 
 app = Flask(__name__)
 
@@ -42,13 +43,17 @@ def get_current_players():
     response = dbGather(query)
     return json.dumps(response)
 
-@app.route('/playerStats', methods=['POST'])
+@app.route('/playerStats', methods=['POST', 'GET'])
 def get_player_stats():
-    print("playerstats",request.json)
-    # # query = "SELECT * FROM bowling_score.players"
-    # # response = dbGather(query)
-    # return json.dumps(response)
-    return ('', 204)
+    if request.method == "POST":
+        statistics.clear()
+        for player in request.json:
+            playerId = str(player['playerId'])
+            query = 'SELECT * FROM bowling_score.players WHERE playerId = ' + playerId + ''
+            statistics.append(dbGather(query))
+        return ('', 204)
+    elif request.method == "GET":
+        return json.dumps(statistics)
 
 
 @app.route('/newPlayer', methods=['POST'])
@@ -61,19 +66,23 @@ def submit_new_player():
 
 @app.route('/submitScore', methods=['POST'])
 def submit_player_score():
-    # runningQuery = ""
     for player in request.json:
         playerId = str(player['playerId'])
         playerScore = str(player['playerScore'])
         query = 'UPDATE bowling_score.players SET lastGame = ' + playerScore + ' WHERE playerId = '+ playerId + '; '
         dbInsert(query)
-        # print("playerId", type(playerId), playerId)
-        # print("playerScore", type(playerScore), playerScore)
-        # print("query", type(query), query)
-        # runningQuery = runningQuery + query
-        # print("runningQuery", type(runningQuery), runningQuery)
-    # print("beforeSend", runningQuery)
-    # dbInsert(runningQuery) // the syntax is correct but for some reason it throws an error
+    return ('', 204)
+
+@app.route('/submitStats', methods=['POST'])
+def submit_player_stats():
+    for player in request.json:
+        playerId = str(player[0]['playerId'])
+        playerAvg = str(player[0]['playerAvg'])
+        highScore = str(player[0]['highScore'])
+        totalGames = str(player[0]['totalGames'])
+        query = 'UPDATE bowling_score.players SET playerAvg = ' + playerAvg + ', highScore = ' + highScore + ', totalGames = ' + totalGames + ' WHERE playerId = '+ playerId
+        print(query)
+        dbInsert(query)
     return ('', 204)
 
 @app.route('/deletePlayer', methods=['POST'])

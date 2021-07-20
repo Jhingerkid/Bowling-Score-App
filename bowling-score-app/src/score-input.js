@@ -1,12 +1,10 @@
-export const ScoreInput = ({gameData, setGameData, buttonInput, setButtonInput, currentInputValue, setCurrentInputValue}) => {
-    let inputBox = null;
+export const ScoreInput = ({gameData, setGameData, currentInputValue, setCurrentInputValue}) => {
     let messageText = `It's ${gameData.players[gameData.turn].playerName}'s Turn`
-    let pinsLeft  = gameData.players[gameData.turn].playerPins
-    if(buttonInput){
-        inputBox = <p>Button input is not implemented yet!</p>
+    if(gameData.winnerID){
+      messageText = `${gameData.winnerName} has won the game, with ${gameData.winnerScore} points`
     }
-    else{
-        inputBox = <input 
+    let pinsLeft  = gameData.players[gameData.turn].playerPins
+    let inputBox = <input 
                         type="number" 
                         min="0" max={pinsLeft} 
                         value={currentInputValue} 
@@ -19,15 +17,17 @@ export const ScoreInput = ({gameData, setGameData, buttonInput, setButtonInput, 
                             }
                         }}
                     />
-    }
-    if(gameData.winnerID){
-        messageText = `${gameData.winnerName} has won the game, with ${gameData.winnerScore} points`
+    let congratsText = " "
+    if(gameData.congrats.length > 0){
+      congratsText = gameData.congrats.map(note => <p>{note}</p>)
     }
     return <div>
         <h2>{messageText}</h2>
         {inputBox}
         <button onClick={() => recordScore(gameData, setGameData, currentInputValue, setCurrentInputValue)}>Submit</button>
-        <button onClick={() => setButtonInput(!(buttonInput))}>Change Input Type</button>
+        <div className="congrats-box">
+          {congratsText}
+        </div>
     </div>
 }
 

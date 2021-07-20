@@ -16,6 +16,11 @@ h1, h2, h3, p {
   color: white;
 }
 
+.yourturn {
+  display: flex;
+  align-items: center;
+}
+
 table,
 th,
 td {

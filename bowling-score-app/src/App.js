@@ -20,12 +20,16 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const testWinners = [
+    { playerId: 91, playerTotal: 40 },
+    { playerId: 92, playerTotal: 90 },
+  ];
   var currentPlayers = [];
-  
+
   useEffect(() => {
     getPlayerData();
   }, []);
-  
+
   useEffect(() => {
     console.log("current players", currentPlayers);
   }, [currentPlayers]);
@@ -138,17 +142,16 @@ function App() {
           {/* This is what is shown during an active game of bowling */}
           {activeGame ? (
             <div>
-              <p>Game Started!</p>
               <ScoreInput
                 gameData={gameData}
                 setGameData={setGameData}
-                buttonInput={buttonInput}
-                setButtonInput={setButtonInput}
                 currentInputValue={currentInputValue}
                 setCurrentInputValue={setCurrentInputValue}
               />
-              <button onClick={exitGame}>End Game</button>
               <ScoreCard gameData={gameData} />
+              <div className="bottomButtons">
+                <button onClick={exitGame}>End Game</button>
+              </div>
             </div>
           ) : // This is the page for creating a new player
           newPlayer ? (

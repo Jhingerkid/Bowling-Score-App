@@ -19,15 +19,19 @@ export const ScoreInput = ({gameData, setGameData, currentInputValue, setCurrent
                     />
     let congratsText = " "
     if(gameData.congrats.length > 0){
-      congratsText = gameData.congrats.map(note => <p>{note}</p>)
+      congratsText = gameData.congrats.map(note => <h3 className="colored">{`${note}  `}</h3>)
     }
     return <div>
+      <div className="bigLabel">
         <h2>{messageText}</h2>
+      </div>
+      <div className="bigLabel">
         {inputBox}
         <button onClick={() => recordScore(gameData, setGameData, currentInputValue, setCurrentInputValue)}>Submit</button>
-        <div className="congrats-box">
-          {congratsText}
-        </div>
+      </div>
+      <div className="congrats-box bigLabel">
+        {congratsText}
+      </div>
     </div>
 }
 

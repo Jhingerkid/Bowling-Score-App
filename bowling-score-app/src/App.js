@@ -81,6 +81,7 @@ function App() {
   const exitGame = async () => {
     if (gameData.winnerID) {
       await sendGameData(gameData.players);
+      await getPlayerData();
     }
     setActiveGame(false);
     setGameData({});

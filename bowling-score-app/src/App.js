@@ -138,17 +138,16 @@ function App() {
           {/* This is what is shown during an active game of bowling */}
           {activeGame ? (
             <div>
-              <p>Game Started!</p>
               <ScoreInput
                 gameData={gameData}
                 setGameData={setGameData}
-                buttonInput={buttonInput}
-                setButtonInput={setButtonInput}
                 currentInputValue={currentInputValue}
                 setCurrentInputValue={setCurrentInputValue}
               />
-              <button onClick={exitGame}>End Game</button>
               <ScoreCard gameData={gameData} />
+              <div className="bottomButtons">
+                <button onClick={exitGame}>End Game</button>
+              </div>
             </div>
           ) : // This is the page for creating a new player
           newPlayer ? (
@@ -204,6 +203,7 @@ function App() {
                             value="yes"
                             type="checkbox"
                             name={player.playerId}
+                            className="checkbox"
                             onClick={() =>
                               updateCurrentPlayers(
                                 player.playerId,

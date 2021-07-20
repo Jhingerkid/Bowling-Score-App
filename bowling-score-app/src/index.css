@@ -95,6 +95,10 @@ input:focus{
   padding: 3vh;
 }
 
+.checkbox:hover {
+  box-shadow: none;
+}
+
 .congrats-box {
   height: 170px;
 }

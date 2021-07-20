@@ -1,6 +1,7 @@
 from flask import Flask, request
 import pymysql
 import json
+import time
 
 
 app = Flask(__name__)
@@ -58,9 +59,9 @@ def submit_player_score():
     dbInsert(query)
     return ('', 204)
 
-@app.route('/playerSearch')
-def search_players():
-    playerName = request.json['playerName']
-    query = 'SELECT * FROM bowling_score.players WHERE playerName LIKE "%'+ playerName +'%";'
-    response = dbGather(query)
-    return json.dumps(response)
+@app.route('/deletePlayer', methods=['POST'])
+def delete_player():
+    playerId = str(request.json['playerId'])
+    query = 'DELETE FROM bowling_score.players WHERE playerId = ' + playerId + ''
+    dbInsert(query)
+    return ('', 204)

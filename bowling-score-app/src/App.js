@@ -4,7 +4,7 @@ import "./App.css";
 import { ScoreCard } from "./score-card";
 import { game } from "./game";
 import { ScoreInput } from "./score-input";
-import { sendWinnerData, createNewPlayer } from "./api-functions";
+import { sendWinnerData, createNewPlayer, sendGameData } from "./api-functions";
 
 function App() {
   const [activeGame, setActiveGame] = useState(false);
@@ -15,7 +15,7 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]); // using dummy data above
   // const [currentPlayers, setCurrentPlayers] = useState([]);
-  const currentPlayers = [];
+  const currentPlayers = [{playerName: "Jim", id: 1}, {playerName: "Ben", id: 2}];
 
   // This is a dummy array for testing purposes. Ready for Leaf to replace with an array built from the selection screen.
   // Just let me know if you use a different format, and I'll change my functions to match.
@@ -24,15 +24,14 @@ function App() {
   const startGame = () => {
     // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
     // (assuming my untested code works properly, hahae)
-    let newGameData = new game(currentPlayersArray);
+    let newGameData = new game(currentPlayers);
     setGameData(newGameData);
     setActiveGame(true);
   };
 
   const exitGame = async () => {
     if (gameData.winnerID) {
-      // sql call for tom to add
-      // await sendWinnerData(gameData.winnerID, gameData.winnerScore);
+      await sendGameData(gameData.players)
     }
     setGameData({});
     setActiveGame(false);

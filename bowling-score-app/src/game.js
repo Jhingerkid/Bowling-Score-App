@@ -13,7 +13,7 @@ export class game {
 
   constructor(playersArray) {
 	this.players = playersArray.map(
-	  (entry) => new player(entry.id, entry.playerName)
+	  (entry) => new player(entry.playerId, entry.playerName)
 	);
 	this.shot = 0;
 	this.frame = 0;
@@ -126,6 +126,7 @@ export class game {
 
   getWinner() {
 	this.winnerScore = 0;
+	this.winnerID = this.players[0].playerID
 	for (let playerObj of this.players) {
 	  console.log(
 		`Checking ${playerObj.playerName}'s score of ${playerObj.playerTotal}`
@@ -138,6 +139,7 @@ export class game {
 	}
 	this.turn = 0
 	this.players.forEach((playerObj) => (playerObj.playerPins = 10));
+	console.log(`Winner ID is ${this.winnerID}`)
 	return;
   }
 }

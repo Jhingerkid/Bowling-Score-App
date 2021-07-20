@@ -20,12 +20,16 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const testWinners = [
+    { playerId: 91, playerTotal: 40 },
+    { playerId: 92, playerTotal: 90 },
+  ];
   var currentPlayers = [];
-  
+
   useEffect(() => {
     getPlayerData();
   }, []);
-  
+
   useEffect(() => {
     console.log("current players", currentPlayers);
   }, [currentPlayers]);

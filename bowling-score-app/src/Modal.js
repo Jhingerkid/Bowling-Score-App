@@ -6,13 +6,13 @@ const Modal = (props) => {
   return (
       <div className="modal" onClick={props.onClose}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-              <div className="modal-header">
+              <div className="modal-header bigLabel">
                   <h2 className="modal-title">{props.title}</h2>
               </div>
               <div className="modal-body">
                   {props.children}
               </div>
-              <div className="modal-footer">
+              <div className="modal-footer bottomButtons">
                   <button className="button" onClick={props.onClose}>Go Back</button>
               </div>
           </div>

@@ -20,8 +20,15 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
-  // const [currentPlayers, setCurrentPlayers] = useState([]);
   var currentPlayers = [];
+  
+  useEffect(() => {
+    getPlayerData();
+  }, []);
+  
+  useEffect(() => {
+    console.log("current players", currentPlayers);
+  }, [currentPlayers]);
 
   async function getPlayerData() {
     let response = await fetch("/players");
@@ -59,13 +66,13 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    console.log("current players", currentPlayers);
-  }, [currentPlayers]);
-
   const startGame = () => {
-    // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
-    // (assuming my untested code works properly, hahae)
+    if (currentPlayers.length < 1) {
+      return;
+    }
+    if (currentPlayers.length > 6) {
+      return;
+    }
     let newGameData = new game(currentPlayers);
     setGameData(newGameData);
     setActiveGame(true);
@@ -79,12 +86,8 @@ function App() {
     setActiveGame(false);
   };
 
-  useEffect(() => {
-    getPlayerData();
-  }, []);
-
   const newPlayerModal = (
-    <div>
+    <div className="bigLabel">
       <h3>
         Enter New Player Name:
         <input
@@ -93,8 +96,8 @@ function App() {
           placeholder="Name"
           onInput={(e) => setNewPlayerName(e.target.value)}
         ></input>
+        <button onClick={() => updateNewPlayer()}>Submit</button>
       </h3>
-      <button onClick={() => updateNewPlayer()}>Submit</button>
     </div>
   );
 
@@ -132,7 +135,7 @@ function App() {
     <div>
       <div className="menu-box">
         <div>
-          {/* This is what is shown during a game of bowling */}
+          {/* This is what is shown during an active game of bowling */}
           {activeGame ? (
             <div>
               <p>Game Started!</p>
@@ -168,62 +171,59 @@ function App() {
           ) : (
             // This is the home page where you navigate to whatever you need
             <div>
-              <h1>Select Players</h1>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Average Score</th>
-                    <th>Total Games Played</th>
-                    <th>Last Game Score</th>
-                    <th>Highscore</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {playaData.map((player) => (
+              <div className="bigLabel">
+                <h1>Select Players</h1>
+              </div>
+              <div className="scroll">
+                <table>
+                  <thead>
                     <tr>
-                      <td>{player.playerName}</td>
-                      <td>{player.playerAvg}</td>
-                      <td>{player.totalGames}</td>
-                      <td>{player.lastGame}</td>
-                      <td>{player.highScore}</td>
-                      <td>
-                        <input
-                          type="hidden"
-                          value="no"
-                          name={player.playerId}
-                        ></input>
-                        <input
-                          value="yes"
-                          type="checkbox"
-                          name={player.playerId}
-                          onClick={() =>
-                            updateCurrentPlayers(
-                              player.playerId,
-                              player.playerName
-                            )
-                          }
-                        ></input>
-                      </td>
+                      <th>Name</th>
+                      <th>Average Score</th>
+                      <th>Total Games Played</th>
+                      <th>Last Game Score</th>
+                      <th>Highscore</th>
+                      <th>Select</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {/* <h2>Currently Selected Players:</h2> */}
-              <button onClick={() => setDeletePlayer(true)}>
-                Delete Player
-              </button>
-              <button onClick={() => setNewPlayer(true)}>New Player</button>
-              <button onClick={startGame}>Start Game</button>
-              {/* both of these buttons below can be deleted, they're there for testing purposes now */}
-              <button
-                onClick={() => {
-                  sendWinnerData(2, 200);
-                }}
-              >
-                Send Score Test
-              </button>
+                  </thead>
+                  <tbody>
+                    {playaData.map((player) => (
+                      <tr>
+                        <td>{player.playerName}</td>
+                        <td>{player.playerAvg}</td>
+                        <td>{player.totalGames}</td>
+                        <td>{player.lastGame}</td>
+                        <td>{player.highScore}</td>
+                        <td>
+                          <input
+                            type="hidden"
+                            value="no"
+                            name={player.playerId}
+                          ></input>
+                          <input
+                            value="yes"
+                            type="checkbox"
+                            name={player.playerId}
+                            onClick={() =>
+                              updateCurrentPlayers(
+                                player.playerId,
+                                player.playerName
+                              )
+                            }
+                          ></input>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <div className="bottomButtons">
+                <button onClick={() => setDeletePlayer(true)}>
+                  Delete Player
+                </button>
+                <button onClick={() => setNewPlayer(true)}>New Player</button>
+                <button onClick={startGame}>Start Game</button>
+              </div>
             </div>
           )}
         </div>

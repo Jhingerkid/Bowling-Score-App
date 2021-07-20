@@ -37,8 +37,8 @@ function App() {
     setPlayaData(player);
   }
 
-  function updateNewPlayer() {
-    createNewPlayer(newPlayerName);
+  async function updateNewPlayer() {
+    await createNewPlayer(newPlayerName);
     getPlayerData();
     setNewPlayer(false);
   }

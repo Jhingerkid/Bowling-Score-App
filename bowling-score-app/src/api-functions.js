@@ -1,6 +1,6 @@
 export const createNewPlayer = async (playerName) => {
   let data = { playerName: playerName };
-  fetch("/newPlayer", {
+  await fetch("/newPlayer", {
     method: "POST",
     body: JSON.stringify(data),
     headers: { "Content-Type": "application/json" },

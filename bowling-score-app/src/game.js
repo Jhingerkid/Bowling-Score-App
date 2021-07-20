@@ -4,6 +4,7 @@ export class game {
   frame;
   turn;
   firstShot;
+  congrats;
   winnerID;
   winnerName;
   winnerScore;
@@ -19,6 +20,7 @@ export class game {
 	this.frame = 0;
 	this.turn = 0;
 	this.firstShot = true;
+	this.congrats = [];
 	this.winnerID = null;
 	this.winnerName = null;
 	this.winnerScore = null;
@@ -37,26 +39,39 @@ export class game {
 	activePlayer.playerPins -= scoreInput;
 	if (activePlayer.playerPins === 0) {
 	  if (this.firstShot) {
-		isStrike = true;
-		activePlayer.playerStrikes.push(frameIndex);
-	  } else {
-		isSpare = true;
-		activePlayer.playerSpares.push(frameIndex);
+      isStrike = true;
+      activePlayer.playerStrikes.push(frameIndex);
+	  }
+    else {
+      isSpare = true;
+      activePlayer.playerSpares.push(frameIndex);
 	  }
 	}
-	// see if previous strikes or spares are earning additional points based on this shot and add them
-	if (activePlayer.playerStrikes.includes(frameIndex - 1)) {
-	  activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput;
-	  if (this.firstShot === false) {
-		activePlayer.playerFrames.totals[frameIndex] += scoreInput;
-	  }
-	}
-	if (activePlayer.playerSpares.includes(frameIndex - 1) && this.firstShot) {
-	  activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput;
-	}
-	if (this.firstShot && shotIndex > 0) {
-	  activePlayer.playerFrames.totals[frameIndex] =
-		activePlayer.playerFrames.totals[frameIndex - 1];
+    // see if previous strikes or spares are earning additional points based on this shot and add them
+  if(shotIndex < 19){
+    if (activePlayer.playerStrikes.includes(frameIndex - 1)) {
+      //if this is the second strike in a row, add points for the first strike before counting the second
+      if(activePlayer.playerStrikes.includes(frameIndex -2)){
+        activePlayer.playerFrames.totals[frameIndex - 2] += scoreInput;
+        activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput;
+      }
+      activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput;
+      if (this.firstShot === false) {
+        activePlayer.playerFrames.totals[frameIndex] += scoreInput;
+      }
+    }
+    if (activePlayer.playerSpares.includes(frameIndex - 1) && this.firstShot) {
+      activePlayer.playerFrames.totals[frameIndex - 1] += scoreInput;
+    }
+  }
+  else if(shotIndex === 19){
+    if(activePlayer.playerStrikes.includes(8)){
+      activePlayer.playerFrames.totals[8] += scoreInput
+      activePlayer.playerFrames.totals[9] += scoreInput
+    }
+  }
+	if (this.firstShot && shotIndex > 0 && shotIndex < 19) {
+	  activePlayer.playerFrames.totals[frameIndex] = activePlayer.playerFrames.totals[frameIndex - 1];
 	}
 	if (isStrike) {
 	  activePlayer.playerFrames.scores[shotIndex] = "X";
@@ -67,11 +82,10 @@ export class game {
 	} else {
 	  activePlayer.playerFrames.scores[shotIndex] = scoreInput;
 	}
-	activePlayer.playerFrames.totals[frameIndex] =
-	  scoreInput + Number(activePlayer.playerFrames.totals[frameIndex]);
+	activePlayer.playerFrames.totals[frameIndex] = scoreInput + Number(activePlayer.playerFrames.totals[frameIndex]);
 	activePlayer.playerTotal = activePlayer.playerFrames.totals[frameIndex];
 	this.nextShot();
-	// if the next player just scored a strike, skip their shot and mark the field with "-"
+	// if the player just scored a strike, skip the next shot and mark the field with "-"
 	while (this.players[this.turn].playerPins === 0) {
 	  this.players[this.turn].playerFrames.scores[this.shot] = "-";
 	  this.nextShot();
@@ -80,10 +94,11 @@ export class game {
   }
 
   nextShot() {
-	if(this.firstShot){
+	if(this.firstShot && this.shot < 19){
 		this.shot += 1;
 		this.firstShot = false;
 		if(this.shot === 19 && this.players[this.turn].playerPins === 0){
+      this.firstShot = true;
 			this.players[this.turn].playerPins = 10;
 		}
 		return;
@@ -92,6 +107,7 @@ export class game {
 	else if(this.shot === 19 && ((this.players[this.turn].playerFrames.scores[18] === "X") || (this.players[this.turn].playerFrames.scores[19] === "/"))){
 		this.shot = 20;
 		if(this.players[this.turn].playerPins === 0){
+      this.firstShot = true;
 			this.players[this.turn].playerPins = 10;
 		}
 		return;

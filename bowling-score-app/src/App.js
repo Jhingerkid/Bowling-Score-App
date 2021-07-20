@@ -20,6 +20,7 @@ function App() {
   const [gameData, setGameData] = useState({});
   const [playaData, setPlayaData] = useState([]);
   const [newPlayerName, setNewPlayerName] = useState("");
+  const [tooManyPlayers, setTooManyPlayers] = useState(false);
   // const [currentPlayers, setCurrentPlayers] = useState([]);
   var currentPlayers = [];
 
@@ -53,6 +54,7 @@ function App() {
         (curPlaya) => curPlaya.playerId !== playerId
       );
       currentPlayers = newCurPlayerList;
+      setTooManyPlayers(false);
       return;
     } else {
       currentPlayers.push(newCurPlayer);
@@ -64,8 +66,13 @@ function App() {
   }, [currentPlayers]);
 
   const startGame = () => {
-    // you should be able to replace the variable "currentPlayersArray" with "currentPlayers" and have it work fine
-    // (assuming my untested code works properly, hahae)
+    if (currentPlayers.length < 1) {
+      return;
+    }
+    if (currentPlayers.length > 6) {
+      setTooManyPlayers(true);
+      return;
+    }
     let newGameData = new game(currentPlayers);
     setGameData(newGameData);
     setActiveGame(true);
@@ -169,53 +176,57 @@ function App() {
             // This is the home page where you navigate to whatever you need
             <div>
               <h1>Select Players</h1>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Average Score</th>
-                    <th>Total Games Played</th>
-                    <th>Last Game Score</th>
-                    <th>Highscore</th>
-                    <th>Select</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {playaData.map((player) => (
+              <div className="scroll">
+                <table>
+                  <thead>
                     <tr>
-                      <td>{player.playerName}</td>
-                      <td>{player.playerAvg}</td>
-                      <td>{player.totalGames}</td>
-                      <td>{player.lastGame}</td>
-                      <td>{player.highScore}</td>
-                      <td>
-                        <input
-                          type="hidden"
-                          value="no"
-                          name={player.playerId}
-                        ></input>
-                        <input
-                          value="yes"
-                          type="checkbox"
-                          name={player.playerId}
-                          onClick={() =>
-                            updateCurrentPlayers(
-                              player.playerId,
-                              player.playerName
-                            )
-                          }
-                        ></input>
-                      </td>
+                      <th>Name</th>
+                      <th>Average Score</th>
+                      <th>Total Games Played</th>
+                      <th>Last Game Score</th>
+                      <th>Highscore</th>
+                      <th>Select</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {playaData.map((player) => (
+                      <tr>
+                        <td>{player.playerName}</td>
+                        <td>{player.playerAvg}</td>
+                        <td>{player.totalGames}</td>
+                        <td>{player.lastGame}</td>
+                        <td>{player.highScore}</td>
+                        <td>
+                          <input
+                            type="hidden"
+                            value="no"
+                            name={player.playerId}
+                          ></input>
+                          <input
+                            value="yes"
+                            type="checkbox"
+                            name={player.playerId}
+                            onClick={() =>
+                              updateCurrentPlayers(
+                                player.playerId,
+                                player.playerName
+                              )
+                            }
+                          ></input>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               {/* <h2>Currently Selected Players:</h2> */}
               <button onClick={() => setDeletePlayer(true)}>
                 Delete Player
               </button>
               <button onClick={() => setNewPlayer(true)}>New Player</button>
-              <button onClick={startGame}>Start Game</button>
+              {tooManyPlayers ? <p>Too many players to start game!</p>
+              : <button onClick={startGame}>Start Game</button>}
+              
               {/* both of these buttons below can be deleted, they're there for testing purposes now */}
               <button
                 onClick={() => {

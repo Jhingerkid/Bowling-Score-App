@@ -82,8 +82,8 @@ function App() {
     if (gameData.winnerID) {
       await sendGameData(gameData.players);
     }
-    setGameData({});
     setActiveGame(false);
+    setGameData({});
   };
 
   const newPlayerModal = (

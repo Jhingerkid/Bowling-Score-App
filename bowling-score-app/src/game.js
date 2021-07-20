@@ -46,6 +46,10 @@ export class game {
       isSpare = true;
       activePlayer.playerSpares.push(frameIndex);
 	  }
+    this.congrats.push(`${activePlayer.playerName} got a ${isStrike ? "Strike": "Spare"}!`)
+    if(this.congrats.length > 5){
+      this.congrats.shift()
+    }
 	}
     // see if previous strikes or spares are earning additional points based on this shot and add them
   if(shotIndex < 19){

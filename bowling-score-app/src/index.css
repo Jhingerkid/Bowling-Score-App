@@ -94,3 +94,7 @@ input:focus{
   justify-content: center;
   padding: 3vh;
 }
+
+.congrats-box {
+  height: 170px;
+}
